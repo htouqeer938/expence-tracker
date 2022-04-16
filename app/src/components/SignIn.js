@@ -32,8 +32,9 @@ export default function SignIn() {
       loginAuthCall(
         data,
         (res) => {
+          console.log(res);
           localStorage.setItem(
-            "group_list",
+            "user_detail",
             Object.entries(res).length > 0
               ? JSON.stringify(res)
               : JSON.stringify(null)

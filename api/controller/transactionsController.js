@@ -1,23 +1,51 @@
-import pool from '../db.js';
-import { DefaultResponse } from '../helpers/helpers.js';
+import pool from "../db.js";
+import { DefaultResponse } from "../helpers/helpers.js";
 
 export const createTransaction = async (req, res) => {
-      try {
-            const { transaction_type_id, transaction_type, transaction_name, transaction_desc, transaction_amount, transaction_date, user_id } = req.body;
-            const qry = `INSERT INTO transactions (transaction_type_id, transaction_type, transaction_name, transaction_desc, transaction_amount, transaction_date, user_id)
+  try {
+    const {
+      transaction_type_id,
+      transaction_type,
+      transaction_name,
+      transaction_desc,
+      transaction_amount,
+      transaction_date,
+      user_id,
+    } = req.body;
+    const qry = `INSERT INTO transactions (transaction_type_id, transaction_type, transaction_name, transaction_desc, transaction_amount, transaction_date, user_id)
                   VALUES ('${transaction_type_id}', '${transaction_type}', '${transaction_name}', '${transaction_desc}', '${transaction_amount}', '${transaction_date}', '${user_id}');`;
-            const data = await pool.query(qry);
-            const result = data.rows[0];
-            return DefaultResponse(res)({
-                  message: 'Successfully',
-                  statusCode: 200,
-                  response: { result }
-            });
-      } catch (error) {
-            return DefaultResponse(res)({
-                  message: error.message,
-                  statusCode: 400,
-                  response: {}
-            });
-      }
-}
+    const data = await pool.query(qry);
+    const result = data.rows[0];
+    return DefaultResponse(res)({
+      message: "Successfully",
+      statusCode: 200,
+      response: { result },
+    });
+  } catch (error) {
+    return DefaultResponse(res)({
+      message: error.message,
+      statusCode: 400,
+      response: {},
+    });
+  }
+};
+
+export const getTransaction = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const qry = `SELECT * FROM transactions WHERE user_id = '${user_id}'`;
+    const data = await pool.query(qry);
+    const result = data.rows;
+    return DefaultResponse(res)({
+      message: "Successfully",
+      statusCode: 200,
+      response: { result },
+    });
+  } catch (error) {
+    return DefaultResponse(res)({
+      message: error.message,
+      statusCode: 400,
+      response: {},
+    });
+  }
+};
